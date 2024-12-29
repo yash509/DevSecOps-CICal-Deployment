@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pe-wa-deployment
+  name: calci-deployment
 spec:
   replicas: 6  # Number of desired replicas
   selector:
     matchLabels:
-      app: pe-wa
+      app: calci
   template:
     metadata:
       labels:
-        app: pe-wa
+        app: calci
     spec:
       containers:
-      - name: pe-wa
-        image: yash5090/pe-wa:latest
+      - name: calci
+        image: yash5090/calci:latest
         ports:
         - containerPort: 5000

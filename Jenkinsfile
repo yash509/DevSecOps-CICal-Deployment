@@ -12,7 +12,7 @@ pipeline {
     }
     
     environment {
-        IMAGE_NAME = "yash5090/bmical"
+        IMAGE_NAME = "yash5090/calci"
         TAG = "${params.DOCKER_TAG}" 
         SCANNER_HOME = tool 'sonar-scanner'
         AWS_ACCOUNT_ID="992382397067"
@@ -20,7 +20,7 @@ pipeline {
         IMAGE_REPO_NAME="webapp-image"
         IMAGE_TAG="v1"
         REPOSITORY_URI = "992382397067.dkr.ecr.ap-south-1.amazonaws.com/webapp-image"
-		VAULT_URL = 'http://13.233.207.160:8200/' // Vault server URL needs to be changed everytime manually
+	VAULT_URL = 'http://13.233.207.160:8200/' // Vault server URL needs to be changed everytime manually
     }
     
     stages {
@@ -40,7 +40,7 @@ pipeline {
                 sh 'docker --version'
                 sh 'ansible --version'
                 sh 'snyk --version'
-				sh 'vault --version'
+		sh 'vault --version'
             }
         }
 		
@@ -143,7 +143,7 @@ pipeline {
         
         stage('Checkout from Git') {                        
             steps {                                       
-                git branch: 'main', url: 'https://github.com/yash509/DevSecOps-Bmicalculator-WebApp-Deployment.git'
+                git branch: 'main', url: 'https://github.com/yash509/DevSecOps-CICal-Deployment.git'
             }
         }
         
@@ -405,15 +405,15 @@ pipeline {
 
         stage ("Remove Docker Container") {
             steps{
-                sh "docker stop bmical | true"
-                sh "docker rm bmical | true"
+                sh "docker stop calci | true"
+                sh "docker rm calci | true"
              }
         }
         
         stage('Deploy to Docker Container'){
             steps{
                 //dir('BMI Calculator (JS)') {
-                    sh "docker run -d --name bmical -p 5000:80 ${IMAGE_NAME}:${TAG}" 
+                    sh "docker run -d --name calci -p 5000:80 ${IMAGE_NAME}:${TAG}" 
                 //}
             }
         }
@@ -474,7 +474,7 @@ pipeline {
                     // Always switch traffic based on DEPLOY_ENV
                     withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                         sh '''
-                            kubectl patch service bmical-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"bmical\\", \\"version\\": \\"''' + newEnv + '''\\"}}}"
+                            kubectl patch service calci-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"calci\\", \\"version\\": \\"''' + newEnv + '''\\"}}}"
                         '''
                     }
                     echo "Traffic has been switched to the ${newEnv} environment."
